@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+.vercel
+coverage
+next-env.d.ts
+types/database.generated.ts
