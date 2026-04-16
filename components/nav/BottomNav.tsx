@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Home, Users, Sparkles, Menu } from "lucide-react";
+import { LayoutDashboard, Home, Users, Calendar, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
   { href: "/dashboard", label: "בקרה", icon: LayoutDashboard },
   { href: "/listings", label: "נכסים", icon: Home },
   { href: "/leads", label: "לידים", icon: Users },
-  { href: "/content", label: "תוכן", icon: Sparkles },
+  { href: "/viewings", label: "ביקורים", icon: Calendar },
   { href: "/reports", label: "עוד", icon: Menu },
 ];
 

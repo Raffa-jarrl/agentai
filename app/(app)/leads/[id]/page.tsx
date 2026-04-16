@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScoreBadge } from "@/components/leads/ScoreBadge";
+import { LeadNotes } from "@/components/leads/LeadNotes";
 import { formatILS } from "@/lib/formatters/currency";
 import { formatDateTime, timeAgo } from "@/lib/formatters/date";
 import { formatIsraeliPhone } from "@/lib/formatters/phone";
@@ -98,6 +99,11 @@ export default async function LeadDetailPage({ params }: { params: { id: string 
             })}
           </ul>
         )}
+      </section>
+
+      <section>
+        <h2 className="font-semibold mb-3">הערות ויומן פעילות</h2>
+        <LeadNotes leadId={lead.id} />
       </section>
 
       <section>

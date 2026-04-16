@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Home, Users, Sparkles, BarChart3, LogOut } from "lucide-react";
+import { LayoutDashboard, Home, Users, Sparkles, BarChart3, LogOut, Calendar, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/app/(auth)/actions";
 
@@ -10,6 +10,7 @@ const items = [
   { href: "/dashboard", label: "לוח בקרה", icon: LayoutDashboard },
   { href: "/listings", label: "נכסים", icon: Home },
   { href: "/leads", label: "לידים", icon: Users },
+  { href: "/viewings", label: "ביקורים", icon: Calendar },
   { href: "/content", label: "תוכן", icon: Sparkles },
   { href: "/reports", label: "דוחות", icon: BarChart3 },
 ];
@@ -38,12 +39,24 @@ export function Sidebar({ agentName }: { agentName: string }) {
           </Link>
         );
       })}
-      <form action={logoutAction} className="mt-auto">
-        <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
-          <LogOut className="h-4 w-4" />
-          <span>יציאה</span>
-        </button>
-      </form>
+      <div className="mt-auto space-y-1">
+        <Link
+          href="/settings"
+          className={cn(
+            "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+            pathname === "/settings" ? "bg-brand text-white" : "text-muted-foreground hover:bg-muted",
+          )}
+        >
+          <Settings className="h-4 w-4" />
+          <span>הגדרות</span>
+        </Link>
+        <form action={logoutAction}>
+          <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
+            <LogOut className="h-4 w-4" />
+            <span>יציאה</span>
+          </button>
+        </form>
+      </div>
     </aside>
   );
 }

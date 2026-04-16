@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Flame, Calendar, Timer, TrendingUp } from "lucide-react";
+import { Flame, Calendar, Timer, TrendingUp, Users, Home, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -53,6 +53,26 @@ export default async function DashboardPage() {
         <Metric icon={Calendar} label="צפיות השבוע" value={viewingsCount ?? 0} />
         <Metric icon={Timer} label="זמן תגובה ממוצע" value="—" hint="בקרוב" />
         <Metric icon={TrendingUp} label="שווי צינור" value={<span className="ltr">{formatILS(pipelineValue)}</span>} variant="teal" />
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { href: "/leads/new", label: "הוסף ליד חדש", icon: Users, color: "text-blue-600 bg-blue-50" },
+          { href: "/listings/new", label: "הוסף נכס", icon: Home, color: "text-green-600 bg-green-50" },
+          { href: "/content", label: "צור תוכן", icon: Sparkles, color: "text-purple-600 bg-purple-50" },
+          { href: "/viewings", label: "ביקורים היום", icon: Calendar, color: "text-orange-600 bg-orange-50" },
+        ].map(({ href, label, icon: Icon, color }) => (
+          <Link
+            key={href}
+            href={href}
+            className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-card p-4 hover:shadow-md transition-shadow text-center"
+          >
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${color}`}>
+              <Icon className="h-5 w-5" />
+            </div>
+            <span className="text-sm font-medium">{label}</span>
+          </Link>
+        ))}
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
