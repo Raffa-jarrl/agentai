@@ -90,9 +90,9 @@ export default function ListingsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">הנכסים שלי</h1>
+        <h1 className="text-h2">הנכסים שלי</h1>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" asChild>
             <a href="/api/export/listings" download>
@@ -121,12 +121,12 @@ export default function ListingsPage() {
           <Button asChild><Link href="/listings/new">הוסף נכס ראשון</Link></Button>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map((l) => (
             <Link
               key={l.id}
               href={`/listings/${l.id}`}
-              className="block border rounded-lg overflow-hidden bg-card hover:shadow-md transition-shadow"
+              className="block border border-border rounded-lg overflow-hidden bg-card hover:shadow-md-hover shadow-sm transition-all duration-200"
             >
               <div className="relative aspect-[4/3] bg-muted">
                 {l.photos?.[0] ? (
@@ -134,17 +134,17 @@ export default function ListingsPage() {
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">ללא תמונה</div>
                 )}
-                <Badge variant="secondary" className="absolute top-2 right-2">{statusLabels[l.status]}</Badge>
+                <Badge variant="secondary" className="absolute top-3 right-3">{statusLabels[l.status]}</Badge>
                 {counts[l.id] ? (
-                  <Badge variant="teal" className="absolute bottom-2 right-2">{counts[l.id]} לידים מתאימים</Badge>
+                  <Badge variant="teal" className="absolute bottom-3 right-3">{counts[l.id]} לידים מתאימים</Badge>
                 ) : null}
               </div>
-              <div className="p-4 space-y-1">
-                <h3 className="font-semibold truncate">{l.title}</h3>
+              <div className="p-5 space-y-2">
+                <h3 className="text-h3 truncate">{l.title}</h3>
                 <p className="text-sm text-muted-foreground truncate">{l.city}{l.neighborhood ? ` · ${l.neighborhood}` : ""}</p>
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-sm">{l.rooms ? `${l.rooms} חד׳` : ""}{l.size_sqm ? ` · ${l.size_sqm} מ״ר` : ""}</span>
-                  <span className="font-bold text-brand ltr">{formatILS(l.price)}</span>
+                <div className="flex items-center justify-between pt-3 border-t border-border">
+                  <span className="text-xs text-muted-foreground font-medium uppercase tracking-wide">{l.rooms ? `${l.rooms} חד׳` : ""}{l.size_sqm ? ` · ${l.size_sqm} מ״ר` : ""}</span>
+                  <span className="text-lg font-bold text-brand ltr">{formatILS(l.price)}</span>
                 </div>
               </div>
             </Link>

@@ -53,9 +53,9 @@ export default function LeadsPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-8">
         <header className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">ניהול לידים</h1>
+          <h1 className="text-h2">ניהול לידים</h1>
         </header>
         <div className="text-center py-16 text-muted-foreground">טוען...</div>
       </div>
@@ -63,9 +63,9 @@ export default function LeadsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">ניהול לידים</h1>
+        <h1 className="text-h2">ניהול לידים</h1>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" asChild>
             <a href="/api/export/leads" download>

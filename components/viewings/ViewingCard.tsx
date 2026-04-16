@@ -76,29 +76,29 @@ export function ViewingCard({ viewing, onUpdate }: Props) {
   }
 
   return (
-    <div className="border rounded-lg bg-card p-4 space-y-3">
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <p className="font-semibold">{viewing.listing?.title ?? "—"}</p>
-          <p className="text-sm text-muted-foreground">{viewing.listing?.city}</p>
+    <div className="border border-border rounded-lg bg-card p-5 space-y-4 shadow-sm hover:shadow-md-hover transition-all duration-200">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1">
+          <p className="text-h3">{viewing.listing?.title ?? "—"}</p>
+          <p className="text-sm text-muted-foreground mt-1">{viewing.listing?.city}</p>
         </div>
-        <Badge variant={statusVariants[viewing.status] ?? "secondary"}>
+        <Badge variant={statusVariants[viewing.status] ?? "secondary"} size="default">
           {statusLabels[viewing.status] ?? viewing.status}
         </Badge>
       </div>
 
-      <div>
-        <p className="text-sm font-medium">{viewing.lead?.full_name ?? "—"}</p>
-        <p className="text-xs text-muted-foreground ltr">{viewing.lead?.phone}</p>
+      <div className="border-t border-border pt-3">
+        <p className="text-sm font-semibold text-foreground">{viewing.lead?.full_name ?? "—"}</p>
+        <p className="text-xs text-muted-foreground ltr mt-1">{viewing.lead?.phone}</p>
       </div>
 
-      <p className="text-sm text-muted-foreground">{formatted}</p>
+      <p className="text-sm font-medium text-foreground">{formatted}</p>
 
       {viewing.notes && (
-        <p className="text-xs text-muted-foreground border-t pt-2">{viewing.notes}</p>
+        <p className="text-xs text-muted-foreground bg-muted/30 rounded p-2">{viewing.notes}</p>
       )}
 
-      <div className="flex flex-wrap gap-2 pt-1">
+      <div className="flex flex-wrap gap-2 pt-2">
         <Button
           size="sm"
           variant="outline"

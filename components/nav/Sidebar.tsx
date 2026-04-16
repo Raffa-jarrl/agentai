@@ -18,10 +18,10 @@ const items = [
 export function Sidebar({ agentName }: { agentName: string }) {
   const pathname = usePathname();
   return (
-    <aside className="hidden md:flex md:flex-col w-60 border-l bg-card p-4 gap-1">
-      <div className="px-3 py-4 border-b mb-2">
+    <aside className="hidden md:flex md:flex-col w-60 border-l border-border bg-card p-4 gap-2 shadow-sm">
+      <div className="px-4 py-4 border-b border-border mb-2">
         <div className="text-lg font-bold text-brand">AgentAI</div>
-        <div className="text-xs text-muted-foreground truncate">{agentName}</div>
+        <div className="text-xs text-muted-foreground truncate mt-1">{agentName}</div>
       </div>
       {items.map(({ href, label, icon: Icon }) => {
         const active = pathname === href || pathname.startsWith(href + "/");
@@ -30,29 +30,29 @@ export function Sidebar({ agentName }: { agentName: string }) {
             key={href}
             href={href}
             className={cn(
-              "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
-              active ? "bg-brand text-white" : "text-foreground hover:bg-muted",
+              "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 font-medium",
+              active ? "bg-brand text-white shadow-sm" : "text-foreground hover:bg-muted hover:shadow-xs",
             )}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="h-5 w-5 flex-shrink-0" />
             <span>{label}</span>
           </Link>
         );
       })}
-      <div className="mt-auto space-y-1">
+      <div className="mt-auto pt-2 border-t border-border space-y-2">
         <Link
           href="/settings"
           className={cn(
-            "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
-            pathname === "/settings" ? "bg-brand text-white" : "text-muted-foreground hover:bg-muted",
+            "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 font-medium",
+            pathname === "/settings" ? "bg-brand text-white shadow-sm" : "text-muted-foreground hover:bg-muted hover:shadow-xs",
           )}
         >
-          <Settings className="h-4 w-4" />
+          <Settings className="h-5 w-5 flex-shrink-0" />
           <span>הגדרות</span>
         </Link>
         <form action={logoutAction}>
-          <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
-            <LogOut className="h-4 w-4" />
+          <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-all duration-200 hover:shadow-xs">
+            <LogOut className="h-5 w-5 flex-shrink-0" />
             <span>יציאה</span>
           </button>
         </form>

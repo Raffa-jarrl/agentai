@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Flame, Calendar, Timer, TrendingUp, Users, Home, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatCard } from "@/components/ui/stat-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatILS } from "@/lib/formatters/currency";
@@ -42,43 +43,43 @@ export default async function DashboardPage() {
   const pipelineValue = (pipelineLeads ?? []).reduce((sum, l) => sum + (l.potential_commission ?? 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <header>
-        <h1 className="text-2xl font-bold">לוח בקרה</h1>
+        <h1 className="text-h2">לוח בקרה</h1>
         <p className="text-muted-foreground text-sm">מה קורה אצלך היום</p>
       </header>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <Metric icon={Flame} label="לידים חמים" value={hotCount ?? 0} variant="hot" />
-        <Metric icon={Calendar} label="צפיות השבוע" value={viewingsCount ?? 0} />
-        <Metric icon={Timer} label="זמן תגובה ממוצע" value="—" hint="בקרוב" />
-        <Metric icon={TrendingUp} label="שווי צינור" value={<span className="ltr">{formatILS(pipelineValue)}</span>} variant="teal" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={<Flame className="h-5 w-5" />} label="לידים חמים" value={hotCount ?? 0} trendColor="red" />
+        <StatCard icon={<Calendar className="h-5 w-5" />} label="צפיות השבוע" value={viewingsCount ?? 0} />
+        <StatCard icon={<Timer className="h-5 w-5" />} label="זמן תגובה" value="—" description="בקרוב" />
+        <StatCard icon={<TrendingUp className="h-5 w-5" />} label="שווי צינור" value={<span className="ltr">{formatILS(pipelineValue)}</span>} trendColor="emerald" />
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { href: "/leads/new", label: "הוסף ליד חדש", icon: Users, color: "text-blue-600 bg-blue-50" },
-          { href: "/listings/new", label: "הוסף נכס", icon: Home, color: "text-green-600 bg-green-50" },
-          { href: "/content", label: "צור תוכן", icon: Sparkles, color: "text-purple-600 bg-purple-50" },
-          { href: "/viewings", label: "ביקורים היום", icon: Calendar, color: "text-orange-600 bg-orange-50" },
+          { href: "/leads/new", label: "הוסף ליד חדש", icon: Users, color: "text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-400" },
+          { href: "/listings/new", label: "הוסף נכס", icon: Home, color: "text-emerald-600 bg-emerald-50 dark:bg-emerald-950 dark:text-emerald-400" },
+          { href: "/content", label: "צור תוכן", icon: Sparkles, color: "text-purple-600 bg-purple-50 dark:bg-purple-950 dark:text-purple-400" },
+          { href: "/viewings", label: "ביקורים היום", icon: Calendar, color: "text-orange-600 bg-orange-50 dark:bg-orange-950 dark:text-orange-400" },
         ].map(({ href, label, icon: Icon, color }) => (
           <Link
             key={href}
             href={href}
-            className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-card p-4 hover:shadow-md transition-shadow text-center"
+            className="flex flex-col items-center justify-center gap-3 rounded-lg border border-border bg-card p-5 hover:shadow-md-hover hover:border-brand/30 transition-all duration-200 text-center"
           >
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${color}`}>
-              <Icon className="h-5 w-5" />
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${color}`}>
+              <Icon className="h-6 w-6" />
             </div>
-            <span className="text-sm font-medium">{label}</span>
+            <span className="text-sm font-semibold">{label}</span>
           </Link>
         ))}
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-6">
         <Card>
           <CardHeader><CardTitle>מה לעשות היום</CardTitle></CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <Block title={`מעקב (${todayFollowups?.length ?? 0})`}>
               {!todayFollowups?.length ? <Empty>אין מעקבים להיום</Empty> : (
                 <ul className="space-y-1 text-sm">
@@ -139,24 +140,10 @@ export default async function DashboardPage() {
   );
 }
 
-function Metric({ icon: Icon, label, value, hint, variant }: { icon: React.ComponentType<{ className?: string }>; label: string; value: React.ReactNode; hint?: string; variant?: "hot" | "teal" }) {
-  const color = variant === "hot" ? "text-hot" : variant === "teal" ? "text-teal" : "text-brand";
-  return (
-    <div className="rounded-lg border bg-card p-4">
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">{label}</span>
-        <Icon className={`h-4 w-4 ${color}`} />
-      </div>
-      <div className="text-2xl font-bold mt-2">{value}</div>
-      {hint && <div className="text-[10px] text-muted-foreground mt-1">{hint}</div>}
-    </div>
-  );
-}
-
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="text-sm font-semibold mb-2">{title}</h3>
+      <h4 className="text-sm font-semibold mb-3 text-foreground">{title}</h4>
       {children}
     </div>
   );

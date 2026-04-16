@@ -103,20 +103,23 @@ function Card({ lead, dragging }: { lead: LeadCardData; dragging?: boolean }) {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className={cn("bg-card border rounded-md p-3 space-y-2 cursor-grab active:cursor-grabbing shadow-sm", (isDragging || dragging) && "opacity-60")}
+      className={cn(
+        "bg-card border border-border rounded-md p-4 space-y-3 cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md-hover transition-all duration-200",
+        (isDragging || dragging) && "opacity-60 shadow-md",
+      )}
     >
-      <div className="flex items-center justify-between gap-2">
-        <Link href={`/leads/${lead.id}`} className="font-medium hover:underline truncate" onClick={(e) => e.stopPropagation()}>
+      <div className="flex items-start justify-between gap-2">
+        <Link href={`/leads/${lead.id}`} className="text-h3 font-semibold hover:text-brand transition-colors truncate flex-1" onClick={(e) => e.stopPropagation()}>
           {lead.full_name}
         </Link>
         <ScoreBadge tier={lead.score} />
       </div>
-      <div className="text-xs text-muted-foreground space-y-0.5">
-        {lead.budget_min && lead.budget_max && (
-          <div className="ltr">{formatILS(lead.budget_min)} – {formatILS(lead.budget_max)}</div>
-        )}
+      {lead.budget_min && lead.budget_max && (
+        <div className="text-base font-bold text-brand ltr">{formatILS(lead.budget_min)} – {formatILS(lead.budget_max)}</div>
+      )}
+      <div className="text-xs text-muted-foreground space-y-1">
         {lead.preferred_areas?.length > 0 && <div className="truncate">{lead.preferred_areas.join(", ")}</div>}
-        {lead.mortgage_approved && <Badge variant="teal" className="text-[10px]">אושר משכנתא</Badge>}
+        {lead.mortgage_approved && <Badge variant="emerald" size="sm">אושר משכנתא</Badge>}
         {lead.last_contact_at && <div>קשר אחרון: {timeAgo(lead.last_contact_at)}</div>}
       </div>
     </div>
