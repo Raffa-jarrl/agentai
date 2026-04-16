@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { formatILS } from "@/lib/formatters/currency";
 import { formatDate } from "@/lib/formatters/date";
 import { MatchesPanel } from "@/components/listings/MatchesPanel";
+import { PhotoReview } from "@/components/listings/PhotoReview";
+import { CopyPhotographerLink } from "@/components/listings/CopyPhotographerLink";
 
 export default async function ListingDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
@@ -18,6 +20,14 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
     .select("id, match_score, match_reasons, notification_sent, lead:leads(id, full_name, phone, score)")
     .eq("listing_id", listing.id)
     .order("match_score", { ascending: false });
+
+  const { data: submissions } = await supabase
+    .from("photo_submissions")
+    .select("*")
+    .eq("listing_id", params.id)
+    .order("created_at", { ascending: false });
+
+  const photographerLink = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/photographer/${listing.id}`;
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -33,7 +43,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
 
       {listing.photos?.length ? (
         <div className="grid grid-cols-3 gap-2">
-          {listing.photos.map((url: string, i: number) => (
+          {(listing.photos as string[]).map((url: string, i: number) => (
             <div key={url} className={`relative rounded-md overflow-hidden ${i === 0 ? "col-span-3 md:col-span-2 md:row-span-2 aspect-[4/3]" : "aspect-square"}`}>
               <Image src={url} alt="" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
             </div>
@@ -59,6 +69,14 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
           <h2 className="text-lg font-semibold">לידים מתאימים ({matches?.length ?? 0})</h2>
         </div>
         <MatchesPanel listingId={listing.id} matches={(matches ?? []) as never} />
+      </section>
+
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <CopyPhotographerLink link={photographerLink} />
+          <h2 className="text-lg font-semibold">תמונות מצלם</h2>
+        </div>
+        <PhotoReview listingId={params.id} submissions={submissions ?? []} />
       </section>
 
       <p className="text-xs text-muted-foreground">נוצר ב-{formatDate(listing.created_at)}</p>
