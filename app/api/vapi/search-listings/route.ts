@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchLiveListings, type LiveListing } from "@/lib/scrape-spectra";
+import { applyPronunciations } from "@/lib/pronunciations";
 
 export const revalidate = 3600;
 
@@ -85,6 +86,9 @@ export async function POST(req: NextRequest) {
     const lines = matches.map((l, i) => `${i + 1}. ${formatListingHebrew(l)}`);
     result = `מצאתי ${matches.length} נכסים:\n${lines.join("\n")}`;
   }
+
+  // Apply pronunciation dictionary so TTS sounds natural
+  result = applyPronunciations(result);
 
   return NextResponse.json({
     results: [{ toolCallId: toolCall.id, result }],
