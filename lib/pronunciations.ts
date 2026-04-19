@@ -14,14 +14,18 @@
 // Using ordinal numbers (first/second/third/fourth) avoids TTS homophone
 // problems: "אלף" is read as "one thousand", "בית" as "house", "דלת" as
 // "door". Ordinals are unambiguous and how Israelis often say it.
+// Spellings hacked to bypass Azure HilaNeural's lexical bias.
+// Plain "אלף" gets read as "eléf" (1000); splitting with hyphen + extra
+// vowel letter forces the TTS to read each syllable phonetically,
+// which yields the letter-name pronunciation.
 const HEBREW_LETTER_NAMES: Record<string, string> = {
-  "א": "אָלֶף",
-  "ב": "בֵּית",
-  "ג": "גִּימֶל",
-  "ד": "דָּלֶת",
-  "ה": "הֵא",
+  "א": "אַ-לֶף",
+  "ב": "בֵּ-ית",
+  "ג": "גִּי-מֶל",
+  "ד": "דָ-לֶת",
+  "ה": "הֵ-א",
   "ו": "וָו",
-  "ז": "זַיִן",
+  "ז": "זַ-יִן",
   "ח": "חֵית",
   "ט": "טֵית",
   "י": "יוֹד",
@@ -42,15 +46,17 @@ const NUMBER_WORDS: Record<number, string> = {
 // --- Exact phrase substitutions (override patterns) ---
 // Add entries here as we discover TTS mispronunciations.
 const PHRASE_DICTIONARY: Record<string, string> = {
-  // Rova with geresh variants → vowelized letter-name form
-  "רובע א׳": "רובע אָלֶף",
-  "רובע ב׳": "רובע בֵּית",
-  "רובע ג׳": "רובע גִּימֶל",
-  "רובע ד׳": "רובע דָּלֶת",
-  "רובע א'": "רובע אָלֶף",
-  "רובע ב'": "רובע בֵּית",
-  "רובע ג'": "רובע גִּימֶל",
-  "רובע ד'": "רובע דָּלֶת",
+  // Rova with geresh variants → phonetic letter-name form.
+  // Hyphens + extra vowel letters force Azure HilaNeural to read the
+  // letter name instead of the homophone word (eléf/bayit/délet).
+  "רובע א׳": "רובע אַ-לֶף",
+  "רובע ב׳": "רובע בֵּ-ית",
+  "רובע ג׳": "רובע גִּי-מֶל",
+  "רובע ד׳": "רובע דָ-לֶת",
+  "רובע א'": "רובע אַ-לֶף",
+  "רובע ב'": "רובע בֵּ-ית",
+  "רובע ג'": "רובע גִּי-מֶל",
+  "רובע ד'": "רובע דָ-לֶת",
 
   // Common abbreviations in listings
   "רח׳": "רחוב",
