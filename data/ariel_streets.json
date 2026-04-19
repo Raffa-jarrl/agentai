@@ -1,0 +1,728 @@
+{
+  "meta": {
+    "city": "אריאל / Ariel",
+    "city_en": "Ariel",
+    "country": "Israel",
+    "total_entries": 87,
+    "format_version": "1.0",
+    "ipa_dialect": "Modern Israeli Hebrew",
+    "ipa_conventions": {
+      "ʁ": "uvular rhotic (ר)",
+      "χ": "voiceless uvular fricative (ח, כ without dagesh)",
+      "ʃ": "sh (שׁ)",
+      "ts": "tz (צ)",
+      "j": "y consonant (י)",
+      "ˈ": "primary stress follows",
+      ".": "syllable boundary"
+    },
+    "confidence_levels": {
+      "high": "common Hebrew word or well-established name",
+      "medium": "proper noun; verify niqqud with a native speaker",
+      "low": "ambiguous reading; definitely verify"
+    },
+    "warnings": [
+      "This list is compiled from public web sources and is NOT the official list from Ariel municipality.",
+      "The official count per the Population Authority (2012) was 117 streets; this file contains fewer.",
+      "Neighborhood/quarter assignment is NOT included because authoritative per-street mapping was not available.",
+      "All niqqud was added using Claude's best reading. Verify with Dicta Nakdan and a native speaker before production use."
+    ]
+  },
+  "streets": [
+    {
+      "undiacritized": "הוורדים",
+      "diacritized": "הַוְּרָדִים",
+      "ipa": "ha.vʁaˈdim",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "יסמין",
+      "diacritized": "יַסְמִין",
+      "ipa": "jasˈmin",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "כלנית",
+      "diacritized": "כַּלָּנִית",
+      "ipa": "ka.laˈnit",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "כלניות",
+      "diacritized": "כַּלָּנִיּוֹת",
+      "ipa": "ka.laˈni.jot",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "אירוס",
+      "diacritized": "אִירוּס",
+      "ipa": "iˈʁus",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "נורית",
+      "diacritized": "נוּרִית",
+      "ipa": "nuˈʁit",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "נרקיס",
+      "diacritized": "נַרְקִיס",
+      "ipa": "naʁˈkis",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "סביון",
+      "diacritized": "סַבְיוֹן",
+      "ipa": "savˈjon",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הסביונים",
+      "diacritized": "הַסַּבְיוֹנִים",
+      "ipa": "ha.sav.joˈnim",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "עירית",
+      "diacritized": "עִירִית",
+      "ipa": "iˈʁit",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "חבצלת",
+      "diacritized": "חֲבַצֶּלֶת",
+      "ipa": "χa.vaˈtse.let",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "חצב",
+      "diacritized": "חָצָב",
+      "ipa": "χaˈtsav",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "חרצית",
+      "diacritized": "חַרְצִית",
+      "ipa": "χaʁˈtsit",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "רקפת",
+      "diacritized": "רַקֶּפֶת",
+      "ipa": "ʁaˈke.fet",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "רותם",
+      "diacritized": "רֹתֶם",
+      "ipa": "ˈʁo.tem",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הרדוף",
+      "diacritized": "הַרְדּוּף",
+      "ipa": "haʁˈduf",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "סיגלית",
+      "diacritized": "סִיגָלִית",
+      "ipa": "si.ɡaˈlit",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הדס",
+      "diacritized": "הֲדַס",
+      "ipa": "haˈdas",
+      "category": "flowers",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "האלון",
+      "diacritized": "הָאַלּוֹן",
+      "ipa": "ha.aˈlon",
+      "category": "trees",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הארז",
+      "diacritized": "הָאֶרֶז",
+      "ipa": "ha.ˈe.ʁez",
+      "category": "trees",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הדקל",
+      "diacritized": "הַדֶּקֶל",
+      "ipa": "ha.ˈde.kel",
+      "category": "trees",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הערבה",
+      "diacritized": "הָעֲרָבָה",
+      "ipa": "ha.a.ʁaˈva",
+      "category": "trees",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "השקד",
+      "diacritized": "הַשָּׁקֵד",
+      "ipa": "ha.ʃaˈked",
+      "category": "trees",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "השקמה",
+      "diacritized": "הַשִּׁקְמָה",
+      "ipa": "ha.ʃikˈma",
+      "category": "trees",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הזית",
+      "diacritized": "הַזַּיִת",
+      "ipa": "ha.ˈza.jit",
+      "category": "trees",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "משעול הזית",
+      "diacritized": "מִשְׁעוֹל הַזַּיִת",
+      "ipa": "mi.ˈʃol ha.ˈza.jit",
+      "category": "trees",
+      "confidence": "high",
+      "notes": "משעול = footpath"
+    },
+    {
+      "undiacritized": "תדהר",
+      "diacritized": "תִּדְהָר",
+      "ipa": "tidˈhaʁ",
+      "category": "trees",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "האשל",
+      "diacritized": "הָאֶשֶׁל",
+      "ipa": "ha.ˈe.ʃel",
+      "category": "trees",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הגלבוע",
+      "diacritized": "הַגִּלְבּוֹעַ",
+      "ipa": "ha.ɡilˈbo.a",
+      "category": "geography",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הגלעד",
+      "diacritized": "הַגִּלְעָד",
+      "ipa": "ha.ɡilˈad",
+      "category": "geography",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הגליל",
+      "diacritized": "הַגָּלִיל",
+      "ipa": "ha.ɡaˈlil",
+      "category": "geography",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הנגב",
+      "diacritized": "הַנֶּגֶב",
+      "ipa": "ha.ˈne.ɡev",
+      "category": "geography",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הבשן",
+      "diacritized": "הַבָּשָׁן",
+      "ipa": "ha.baˈʃan",
+      "category": "geography",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "החרמון",
+      "diacritized": "הַחֶרְמוֹן",
+      "ipa": "ha.χeʁˈmon",
+      "category": "geography",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "התבור",
+      "diacritized": "הַתָּבוֹר",
+      "ipa": "ha.taˈvoʁ",
+      "category": "geography",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הירדן",
+      "diacritized": "הַיַּרְדֵּן",
+      "ipa": "ha.jaʁˈden",
+      "category": "geography",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "מוריה",
+      "diacritized": "מוֹרִיָּה",
+      "ipa": "mo.ʁi.ˈja",
+      "category": "geography",
+      "confidence": "high",
+      "notes": "Mount Moriah"
+    },
+    {
+      "undiacritized": "רמת הגולן",
+      "diacritized": "רָמַת הַגּוֹלָן",
+      "ipa": "ʁaˈmat ha.ɡoˈlan",
+      "category": "geography",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "שניר",
+      "diacritized": "שְׂנִיר",
+      "ipa": "sniʁ",
+      "category": "geography",
+      "confidence": "high",
+      "notes": "Snir river"
+    },
+    {
+      "undiacritized": "הכרמל",
+      "diacritized": "הַכַּרְמֶל",
+      "ipa": "ha.kaʁˈmel",
+      "category": "geography",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "בית לחם",
+      "diacritized": "בֵּית לֶחֶם",
+      "ipa": "bet ˈle.χem",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "חברון",
+      "diacritized": "חֶבְרוֹן",
+      "ipa": "χev.ˈʁon",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "יודפת",
+      "diacritized": "יוֹדְפַת",
+      "ipa": "jodˈfat",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "יהודה",
+      "diacritized": "יְהוּדָה",
+      "ipa": "je.huˈda",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "מואב",
+      "diacritized": "מוֹאָב",
+      "ipa": "moˈav",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "אפרתה",
+      "diacritized": "אֶפְרָתָה",
+      "ipa": "ef.ʁaˈta",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "אילות",
+      "diacritized": "אֵילוֹת",
+      "ipa": "eˈlot",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "ציון",
+      "diacritized": "צִיּוֹן",
+      "ipa": "tsiˈjon",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "ימית",
+      "diacritized": "יָמִית",
+      "ipa": "jaˈmit",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": "former Sinai settlement"
+    },
+    {
+      "undiacritized": "שער הגיא",
+      "diacritized": "שַׁעַר הַגַּיְא",
+      "ipa": "ˈʃa.aʁ ha.ɡaj",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "השומרון",
+      "diacritized": "הַשּׁוֹמְרוֹן",
+      "ipa": "ha.ʃom.ˈʁon",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "עפרון",
+      "diacritized": "עֶפְרוֹן",
+      "ipa": "ef.ˈʁon",
+      "category": "biblical_places",
+      "confidence": "medium",
+      "notes": "biblical figure/place"
+    },
+    {
+      "undiacritized": "מפרץ אילת",
+      "diacritized": "מִפְרַץ אֵילַת",
+      "ipa": "mif.ˈʁats eˈlat",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "מפרץ שלמה",
+      "diacritized": "מִפְרַץ שְׁלֹמֹה",
+      "ipa": "mif.ˈʁats ʃloˈmo",
+      "category": "biblical_places",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "גילה",
+      "diacritized": "גִּילֹה",
+      "ipa": "ɡiˈlo",
+      "category": "biblical_places",
+      "confidence": "medium",
+      "notes": "could be גִּילָה (joy) — verify"
+    },
+    {
+      "undiacritized": "אבנר",
+      "diacritized": "אַבְנֵר",
+      "ipa": "avˈneʁ",
+      "category": "heroes",
+      "confidence": "high",
+      "notes": "Avner ben Ner"
+    },
+    {
+      "undiacritized": "גדעון",
+      "diacritized": "גִּדְעוֹן",
+      "ipa": "ɡidˈon",
+      "category": "heroes",
+      "confidence": "high",
+      "notes": "Judge Gideon"
+    },
+    {
+      "undiacritized": "יפתח",
+      "diacritized": "יִפְתָּח",
+      "ipa": "jifˈtaχ",
+      "category": "heroes",
+      "confidence": "high",
+      "notes": "Jephthah"
+    },
+    {
+      "undiacritized": "יואב",
+      "diacritized": "יוֹאָב",
+      "ipa": "joˈav",
+      "category": "heroes",
+      "confidence": "high",
+      "notes": "Yoav ben Tzeruya"
+    },
+    {
+      "undiacritized": "ברק",
+      "diacritized": "בָּרָק",
+      "ipa": "baˈʁak",
+      "category": "heroes",
+      "confidence": "high",
+      "notes": "Barak ben Avinoam"
+    },
+    {
+      "undiacritized": "אורי בראון",
+      "diacritized": "אוּרִי בְּרָאוּן",
+      "ipa": "ˈu.ʁi bʁaˈun",
+      "category": "heroes",
+      "confidence": "high",
+      "notes": "Brigadier General Uri Braun"
+    },
+    {
+      "undiacritized": "מבצע דני",
+      "diacritized": "מִבְצָע דָּנִי",
+      "ipa": "miv.ˈtsa ˈda.ni",
+      "category": "operations",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "מבצע עובדה",
+      "diacritized": "מִבְצַע עוֹבְדָה",
+      "ipa": "miv.ˈtsa ovˈda",
+      "category": "operations",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "מבצע חירם",
+      "diacritized": "מִבְצַע חִירָם",
+      "ipa": "miv.ˈtsa χiˈʁam",
+      "category": "operations",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "מבצע קדש",
+      "diacritized": "מִבְצַע קָדֵשׁ",
+      "ipa": "miv.ˈtsa kaˈdeʃ",
+      "category": "operations",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "מבצע הראל",
+      "diacritized": "מִבְצַע הָרֵאל",
+      "ipa": "miv.ˈtsa ha.ˈʁel",
+      "category": "operations",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "דרך הציונות",
+      "diacritized": "דֶּרֶךְ הַצִּיּוֹנוּת",
+      "ipa": "ˈde.ʁeχ ha.tsi.jo.ˈnut",
+      "category": "zionism",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "ששת הימים",
+      "diacritized": "שֵׁשֶׁת הַיָּמִים",
+      "ipa": "ˈʃe.ʃet ha.jaˈmim",
+      "category": "zionism",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "ההגנה",
+      "diacritized": "הַהֲגָנָה",
+      "ipa": "ha.ha.ɡaˈna",
+      "category": "zionism",
+      "confidence": "high",
+      "notes": "Haganah"
+    },
+    {
+      "undiacritized": "האצ״ל",
+      "diacritized": "הָאֶצַ״ל",
+      "ipa": "ha.ˈe.tsel",
+      "category": "zionism",
+      "confidence": "high",
+      "notes": "Etzel/Irgun"
+    },
+    {
+      "undiacritized": "הנחשונים",
+      "diacritized": "הַנַּחְשׁוֹנִים",
+      "ipa": "ha.naχ.ʃoˈnim",
+      "category": "zionism",
+      "confidence": "high",
+      "notes": "pioneering spirit"
+    },
+    {
+      "undiacritized": "דרך הנחשונים",
+      "diacritized": "דֶּרֶךְ הַנַּחְשׁוֹנִים",
+      "ipa": "ˈde.ʁeχ ha.naχ.ʃoˈnim",
+      "category": "zionism",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "הקוממיות",
+      "diacritized": "הַקּוֹמְמִיּוּת",
+      "ipa": "ha.ko.mem.iˈjut",
+      "category": "zionism",
+      "confidence": "medium",
+      "notes": "verify stress"
+    },
+    {
+      "undiacritized": "העצמאות",
+      "diacritized": "הָעַצְמָאוּת",
+      "ipa": "ha.ats.maˈut",
+      "category": "zionism",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "רון נחמן",
+      "diacritized": "רוֹן נַחְמָן",
+      "ipa": "ʁon naχˈman",
+      "category": "zionism",
+      "confidence": "high",
+      "notes": "founding mayor of Ariel"
+    },
+    {
+      "undiacritized": "צה״ל",
+      "diacritized": "צַהַ״ל",
+      "ipa": "ˈtsa.hal",
+      "category": "zionism",
+      "confidence": "high",
+      "notes": "IDF acronym"
+    },
+    {
+      "undiacritized": "הפסגה",
+      "diacritized": "הַפִּסְגָּה",
+      "ipa": "ha.pisˈɡa",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": "the peak"
+    },
+    {
+      "undiacritized": "הגנים",
+      "diacritized": "הַגַּנִּים",
+      "ipa": "ha.ɡaˈnim",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "נווה שאנן",
+      "diacritized": "נְוֵה שַׁאֲנָן",
+      "ipa": "ne.ˈve ʃa.a.ˈnan",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "כלילת יופי",
+      "diacritized": "כְּלִילַת יֹפִי",
+      "ipa": "kli.ˈlat ˈjo.fi",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": "crowned with beauty"
+    },
+    {
+      "undiacritized": "מעלה הגבעה",
+      "diacritized": "מַעֲלֵה הַגִּבְעָה",
+      "ipa": "ma.a.ˈle ha.ɡivˈa",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": "hill ascent"
+    },
+    {
+      "undiacritized": "יפה נוף",
+      "diacritized": "יְפֵה נוֹף",
+      "ipa": "je.ˈfe nof",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": "beautiful view"
+    },
+    {
+      "undiacritized": "עיר היונה",
+      "diacritized": "עִיר הַיּוֹנָה",
+      "ipa": "iʁ ha.joˈna",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "מבוא חמה",
+      "diacritized": "מְבוֹא חַמָּה",
+      "ipa": "me.ˈvo χaˈma",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "חופית",
+      "diacritized": "חוֹפִית",
+      "ipa": "χoˈfit",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "אזור תעשייה מערב",
+      "diacritized": "אֵזוֹר תַּעֲשִׂיָּה מַעֲרָב",
+      "ipa": "e.ˈzoʁ ta.a.siˈja ma.a.ˈʁav",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": ""
+    },
+    {
+      "undiacritized": "מכללת אריאל",
+      "diacritized": "מִכְלֶלֶת אֲרִיאֵל",
+      "ipa": "miχ.ˈle.let a.ʁi.ˈel",
+      "category": "descriptive",
+      "confidence": "high",
+      "notes": "Ariel University"
+    }
+  ]
+}
