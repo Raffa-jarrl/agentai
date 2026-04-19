@@ -116,6 +116,20 @@ export default function PronunciationsPage() {
     }
   }
 
+  async function syncAll() {
+    if (!confirm("להריץ סנכרון ניקוד מול DICTA Nakdan? ערכים עם 'manual' בהערות יישארו ללא שינוי.")) return;
+    toast.info("מסנכרן... יכול לקחת דקה");
+    try {
+      const r = await fetch("/api/pronunciations/sync", { method: "POST" });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "שגיאה");
+      toast.success(`סנכרון הושלם: ${d.updated} עודכנו, ${d.unchanged} ללא שינוי, ${d.skipped_manual} ידניים דולגו`);
+      load();
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "שגיאה");
+    }
+  }
+
   async function remove(id: string) {
     if (!confirm("למחוק את הערך?")) return;
     try {
@@ -130,11 +144,14 @@ export default function PronunciationsPage() {
 
   return (
     <div className="container mx-auto p-6 space-y-6 max-w-5xl">
-      <div>
-        <h1 className="text-2xl font-bold">מילון הגייה</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          ערכים שמוחלפים לפני TTS של סוכן הטלפון. למשל: &quot;רובע א&quot; → &quot;רובע ראשון&quot;.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold">מילון הגייה</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            ערכים שמוחלפים לפני TTS של סוכן הטלפון. למשל: &quot;רובע א&quot; → &quot;רובע אַ-לֶף&quot;.
+          </p>
+        </div>
+        <Button variant="outline" onClick={syncAll}>סנכרן עם Nakdan</Button>
       </div>
 
       <Card>
