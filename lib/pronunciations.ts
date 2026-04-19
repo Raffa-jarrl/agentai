@@ -20,7 +20,7 @@
 // which yields the letter-name pronunciation.
 const HEBREW_LETTER_NAMES: Record<string, string> = {
   "א": "אַ-לֶף",
-  "ב": "בֵּ-ית",
+  "ב": "בֶּט",
   "ג": "גִּי-מֶל",
   "ד": "דָ-לֶת",
   "ה": "הֵ-א",
@@ -50,11 +50,11 @@ const PHRASE_DICTIONARY: Record<string, string> = {
   // Hyphens + extra vowel letters force Azure HilaNeural to read the
   // letter name instead of the homophone word (eléf/bayit/délet).
   "רובע א׳": "רובע אַ-לֶף",
-  "רובע ב׳": "רובע בֵּ-ית",
+  "רובע ב׳": "רובע בֶּט",
   "רובע ג׳": "רובע גִּי-מֶל",
   "רובע ד׳": "רובע דָ-לֶת",
   "רובע א'": "רובע אַ-לֶף",
-  "רובע ב'": "רובע בֵּ-ית",
+  "רובע ב'": "רובע בֶּט",
   "רובע ג'": "רובע גִּי-מֶל",
   "רובע ד'": "רובע דָ-לֶת",
 
