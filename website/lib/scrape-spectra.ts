@@ -68,7 +68,8 @@ async function collectUrls(): Promise<string[]> {
       $("a[href]").each((_, el) => {
         const href = $(el).attr("href") || "";
         if (href.includes("/נכס/") || href.includes("/%D7%A0%D7%9B%D7%A1/") || href.includes("/%d7%a0%d7%9b%d7%a1/")) {
-          urls.add(href.split("?")[0]);
+          const clean = href.split("?")[0];
+          if (clean) urls.add(clean);
         }
       });
     } catch { /* skip */ }
@@ -80,11 +81,11 @@ async function scrapeOne(url: string): Promise<LiveListing | null> {
   try {
     const html = await fetchPage(url);
     const $ = cheerio.load(html);
-    const title = ($("h1").first().text() || $("title").text().split(" - ")[0]).trim();
+    const title = ($("h1").first().text() || ($("title").text().split(" - ")[0] ?? "")).trim();
     const body = $("body").text();
 
     const priceM = body.match(/₪([\d,]+)/);
-    const price = priceM ? parseInt(priceM[1].replace(/,/g, "")) : 0;
+    const price = priceM?.[1] ? parseInt(priceM[1].replace(/,/g, "")) : 0;
 
     const sqmM = body.match(/שטח בנוי\s*\n?\s*(\d{2,4})\s*מ/) || body.match(/(\d{2,4})\s*מ״ר/);
     const floorM = body.match(/קומה\s*\n?\s*(\d{1,2})/);
@@ -95,7 +96,7 @@ async function scrapeOne(url: string): Promise<LiveListing | null> {
       url.includes("להשכרה") || url.includes("%d7%9c%d7%94%d7%a9%d7%9b%d7%a8%d7%94") ? "rent" : "sale";
 
     const addrM = title.match(/^(.+?),\s*אריאל/);
-    const address = addrM ? addrM[1].trim() : "אריאל";
+    const address = addrM?.[1] ? addrM[1].trim() : "אריאל";
 
     let description = "";
     $("p").each((_, el) => {
@@ -119,10 +120,10 @@ async function scrapeOne(url: string): Promise<LiveListing | null> {
       city: "אריאל",
       neighborhood: extractNeighborhood(address) || extractNeighborhood(title),
       price,
-      rooms: roomsM ? parseFloat(roomsM[1]) : null,
-      size_sqm: sqmM ? parseInt(sqmM[1]) : null,
-      floor: floorM ? parseInt(floorM[1]) : null,
-      property_type: mapType(typeM?.[1] || title),
+      rooms: roomsM?.[1] ? parseFloat(roomsM[1]) : null,
+      size_sqm: sqmM?.[1] ? parseInt(sqmM[1]) : null,
+      floor: floorM?.[1] ? parseInt(floorM[1]) : null,
+      property_type: mapType(typeM?.[1] ?? title),
       listing_type,
       description: description.substring(0, 1000) || null,
       photos: photos.slice(0, 6),
