@@ -58,13 +58,34 @@ function formatListingHebrew(l: LiveListing): string {
   return parts.join(", ");
 }
 
+// Normalize neighborhood aliases so "רובע ראשון", "רובע אלף", "רובע א" all match
+const NEIGHBORHOOD_ALIASES: Record<string, string[]> = {
+  "רובע א": ["רובע א", "רובע אלף", "רובע ראשון", "ראשון"],
+  "רובע ב": ["רובע ב", "רובע בית", "רובע שני", "שני"],
+  "רובע ג": ["רובע ג", "רובע גימל", "רובע שלישי", "שלישי"],
+  "רובע ד": ["רובע ד", "רובע דלת", "רובע רביעי", "רביעי"],
+};
+
+function neighborhoodMatches(listingN: string, queryN: string): boolean {
+  const q = queryN.trim();
+  // Direct match
+  if (listingN.includes(q)) return true;
+  // Check aliases — if query is any alias of a canonical, check canonical against listing
+  for (const [canonical, aliases] of Object.entries(NEIGHBORHOOD_ALIASES)) {
+    if (aliases.some(a => q.includes(a))) {
+      return listingN.includes(canonical);
+    }
+  }
+  return false;
+}
+
 function searchListings(listings: LiveListing[], args: SearchArgs): LiveListing[] {
   return listings.filter(l => {
     if (args.listing_type && l.listing_type !== args.listing_type) return false;
     if (args.rooms && l.rooms && Math.abs(l.rooms - args.rooms) > 0.5) return false;
     if (args.max_budget && l.price > args.max_budget) return false;
     if (args.min_budget && l.price < args.min_budget) return false;
-    if (args.neighborhood && l.neighborhood && !l.neighborhood.includes(args.neighborhood)) return false;
+    if (args.neighborhood && l.neighborhood && !neighborhoodMatches(l.neighborhood, args.neighborhood)) return false;
     if (args.property_type && l.property_type !== args.property_type) return false;
     return true;
   }).slice(0, 5);
