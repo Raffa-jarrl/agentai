@@ -15,16 +15,16 @@
 // problems: "אלף" is read as "one thousand", "בית" as "house", "דלת" as
 // "door". Ordinals are unambiguous and how Israelis often say it.
 const HEBREW_LETTER_NAMES: Record<string, string> = {
-  "א": "ראשון",
-  "ב": "שני",
-  "ג": "שלישי",
-  "ד": "רביעי",
-  "ה": "חמישי",
-  "ו": "שישי",
-  "ז": "שביעי",
-  "ח": "שמיני",
-  "ט": "תשיעי",
-  "י": "עשירי",
+  "א": "אָלֶף",
+  "ב": "בֵּית",
+  "ג": "גִּימֶל",
+  "ד": "דָּלֶת",
+  "ה": "הֵא",
+  "ו": "וָו",
+  "ז": "זַיִן",
+  "ח": "חֵית",
+  "ט": "טֵית",
+  "י": "יוֹד",
 };
 
 // --- Numbers 1-30 in Hebrew (masculine, as used for addresses) ---
@@ -42,15 +42,15 @@ const NUMBER_WORDS: Record<number, string> = {
 // --- Exact phrase substitutions (override patterns) ---
 // Add entries here as we discover TTS mispronunciations.
 const PHRASE_DICTIONARY: Record<string, string> = {
-  // Rova with geresh variants → ordinal form
-  "רובע א׳": "רובע ראשון",
-  "רובע ב׳": "רובע שני",
-  "רובע ג׳": "רובע שלישי",
-  "רובע ד׳": "רובע רביעי",
-  "רובע א'": "רובע ראשון",
-  "רובע ב'": "רובע שני",
-  "רובע ג'": "רובע שלישי",
-  "רובע ד'": "רובע רביעי",
+  // Rova with geresh variants → vowelized letter-name form
+  "רובע א׳": "רובע אָלֶף",
+  "רובע ב׳": "רובע בֵּית",
+  "רובע ג׳": "רובע גִּימֶל",
+  "רובע ד׳": "רובע דָּלֶת",
+  "רובע א'": "רובע אָלֶף",
+  "רובע ב'": "רובע בֵּית",
+  "רובע ג'": "רובע גִּימֶל",
+  "רובע ד'": "רובע דָּלֶת",
 
   // Common abbreviations in listings
   "רח׳": "רחוב",

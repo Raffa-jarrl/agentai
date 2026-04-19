@@ -109,9 +109,11 @@ export async function POST(req: NextRequest) {
     result = `מצאתי ${matches.length} נכסים:\n${lines.join("\n")}`;
   }
 
-  // 1. Pronunciation dictionary — hard overrides (abbreviations, rova letters, etc.)
+  // 1. Pronunciation dictionary — supplies vowelized replacements for abbreviations,
+  //    rova letters, and any term Arik added via /settings/pronunciations.
   result = await applyPronunciationsWithDb(result);
-  // 2. Nakdan — auto-vowelize the rest so Azure TTS pronounces street names correctly
+  // 2. Nakdan — vowelize the remaining plain Hebrew. Nakdan preserves existing
+  //    niqqud, so the dictionary's replacements survive.
   result = await vowelizeHebrew(result);
 
   return NextResponse.json({
