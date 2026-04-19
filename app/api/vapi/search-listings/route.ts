@@ -24,14 +24,35 @@ interface SearchArgs {
   property_type?: string;
 }
 
+// Format price in natural Hebrew speech:
+// 1,480,000 → "מיליון וארבע מאות ושמונים אלף שקל"
+// 2,500,000 → "שני מיליון וחצי שקל"
+// 4,500     → "ארבעת אלפים וחמש מאות שקל"
+function formatPriceHebrew(price: number): string {
+  if (price >= 1_000_000) {
+    const millions = Math.floor(price / 1_000_000);
+    const remainder = price % 1_000_000;
+    const thousands = Math.round(remainder / 1000);
+    const millionsWord = millions === 1 ? "מיליון" : millions === 2 ? "שני מיליון" : `${millions} מיליון`;
+    if (thousands === 0) return `${millionsWord} שקל`;
+    if (thousands === 500) return `${millionsWord} וחצי שקל`;
+    return `${millionsWord} ו${thousands} אלף שקל`;
+  }
+  if (price >= 1000) {
+    const thousands = Math.round(price / 1000);
+    return `${thousands} אלף שקל`;
+  }
+  return `${price} שקל`;
+}
+
 function formatListingHebrew(l: LiveListing): string {
   const parts = [
-    l.title,
+    l.title.replace(/,\s*אריאל:.*$/, ""), // trim the long title
     l.rooms ? `${l.rooms} חדרים` : null,
-    l.size_sqm ? `${l.size_sqm} מ"ר` : null,
+    l.size_sqm ? `${l.size_sqm} מטר` : null,
     l.floor != null ? `קומה ${l.floor}` : null,
     l.neighborhood,
-    `₪${l.price.toLocaleString("he-IL")}`,
+    formatPriceHebrew(l.price),
   ].filter(Boolean);
   return parts.join(", ");
 }
