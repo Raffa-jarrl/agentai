@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchLiveListings, type LiveListing } from "@/lib/scrape-spectra";
 import { applyPronunciationsWithDb } from "@/lib/pronunciations";
+import { vowelizeHebrew } from "@/lib/nakdan";
 
 export const revalidate = 3600;
 
@@ -108,8 +109,10 @@ export async function POST(req: NextRequest) {
     result = `מצאתי ${matches.length} נכסים:\n${lines.join("\n")}`;
   }
 
-  // Apply pronunciation dictionary so TTS sounds natural
+  // 1. Pronunciation dictionary — hard overrides (abbreviations, rova letters, etc.)
   result = await applyPronunciationsWithDb(result);
+  // 2. Nakdan — auto-vowelize the rest so Azure TTS pronounces street names correctly
+  result = await vowelizeHebrew(result);
 
   return NextResponse.json({
     results: [{ toolCallId: toolCall.id, result }],
