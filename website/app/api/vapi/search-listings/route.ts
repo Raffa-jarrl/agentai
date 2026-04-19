@@ -1,0 +1,71 @@
+import { NextRequest, NextResponse } from "next/server";
+import { fetchLiveListings, type LiveListing } from "@/lib/scrape-spectra";
+
+export const revalidate = 3600;
+
+// Vapi tool webhook — filters live listings and returns Hebrew-formatted matches
+// Called by the AI agent during a call via function calling.
+
+interface VapiToolCall {
+  message?: {
+    toolCalls?: Array<{
+      id: string;
+      function: { name: string; arguments: Record<string, unknown> };
+    }>;
+  };
+}
+
+interface SearchArgs {
+  listing_type?: "rent" | "sale";
+  rooms?: number;
+  max_budget?: number;
+  min_budget?: number;
+  neighborhood?: string;
+  property_type?: string;
+}
+
+function formatListingHebrew(l: LiveListing): string {
+  const parts = [
+    l.title,
+    l.rooms ? `${l.rooms} חדרים` : null,
+    l.size_sqm ? `${l.size_sqm} מ"ר` : null,
+    l.floor != null ? `קומה ${l.floor}` : null,
+    l.neighborhood,
+    `₪${l.price.toLocaleString("he-IL")}`,
+  ].filter(Boolean);
+  return parts.join(", ");
+}
+
+function searchListings(listings: LiveListing[], args: SearchArgs): LiveListing[] {
+  return listings.filter(l => {
+    if (args.listing_type && l.listing_type !== args.listing_type) return false;
+    if (args.rooms && l.rooms && Math.abs(l.rooms - args.rooms) > 0.5) return false;
+    if (args.max_budget && l.price > args.max_budget) return false;
+    if (args.min_budget && l.price < args.min_budget) return false;
+    if (args.neighborhood && l.neighborhood && !l.neighborhood.includes(args.neighborhood)) return false;
+    if (args.property_type && l.property_type !== args.property_type) return false;
+    return true;
+  }).slice(0, 5);
+}
+
+export async function POST(req: NextRequest) {
+  const body = (await req.json()) as VapiToolCall;
+  const toolCall = body.message?.toolCalls?.[0];
+  if (!toolCall) return NextResponse.json({ error: "no tool call" }, { status: 400 });
+
+  const args = toolCall.function.arguments as SearchArgs;
+  const all = await fetchLiveListings();
+  const matches = searchListings(all, args);
+
+  let result: string;
+  if (matches.length === 0) {
+    result = "לא נמצאו נכסים מתאימים בקריטריונים שביקשת. יש לי נכסים אחרים שאולי יתאימו — רוצה שאציע אפשרויות קרובות?";
+  } else {
+    const lines = matches.map((l, i) => `${i + 1}. ${formatListingHebrew(l)}`);
+    result = `מצאתי ${matches.length} נכסים:\n${lines.join("\n")}`;
+  }
+
+  return NextResponse.json({
+    results: [{ toolCallId: toolCall.id, result }],
+  });
+}
