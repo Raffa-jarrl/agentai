@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchLiveListings, type LiveListing } from "@/lib/scrape-spectra";
-import { applyPronunciations } from "@/lib/pronunciations";
+import { applyPronunciationsWithDb } from "@/lib/pronunciations";
 
 export const revalidate = 3600;
 
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Apply pronunciation dictionary so TTS sounds natural
-  result = applyPronunciations(result);
+  result = await applyPronunciationsWithDb(result);
 
   return NextResponse.json({
     results: [{ toolCallId: toolCall.id, result }],

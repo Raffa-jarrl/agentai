@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Home, Users, Sparkles, BarChart3, LogOut, Calendar, Settings } from "lucide-react";
+import { LayoutDashboard, Home, Users, Sparkles, BarChart3, LogOut, Calendar, Settings, Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/app/(auth)/actions";
 
@@ -40,6 +40,16 @@ export function Sidebar({ agentName }: { agentName: string }) {
         );
       })}
       <div className="mt-auto pt-2 border-t border-border space-y-2">
+        <Link
+          href="/settings/pronunciations"
+          className={cn(
+            "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 font-medium",
+            pathname === "/settings/pronunciations" ? "bg-brand text-white shadow-sm" : "text-muted-foreground hover:bg-muted hover:shadow-xs",
+          )}
+        >
+          <Mic className="h-5 w-5 flex-shrink-0" />
+          <span>מילון הגייה</span>
+        </Link>
         <Link
           href="/settings"
           className={cn(

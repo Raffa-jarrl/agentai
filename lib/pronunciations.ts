@@ -79,15 +79,18 @@ function numberToHebrewWord(n: number): string {
 
 /**
  * Main entry point: rewrite a string to be TTS-friendly Hebrew.
+ * Optional `extra` map merges DB-managed entries on top of hardcoded defaults.
  */
-export function applyPronunciations(text: string): string {
+export function applyPronunciations(text: string, extra?: Record<string, string>): string {
   if (!text) return text;
   let out = text;
 
+  const merged: Record<string, string> = { ...PHRASE_DICTIONARY, ...(extra ?? {}) };
+
   // 1. Phrase dictionary (longest-first to avoid partial overlaps)
-  const phrases = Object.keys(PHRASE_DICTIONARY).sort((a, b) => b.length - a.length);
+  const phrases = Object.keys(merged).sort((a, b) => b.length - a.length);
   for (const phrase of phrases) {
-    out = out.split(phrase).join(PHRASE_DICTIONARY[phrase]!);
+    out = out.split(phrase).join(merged[phrase]!);
   }
 
   // 2. "רובע X" where X is a bare Hebrew letter → expand to letter name
@@ -105,4 +108,36 @@ export function applyPronunciations(text: string): string {
   });
 
   return out;
+}
+
+// --- DB-managed entries (loaded at runtime, cached 60s) ---
+let dbCache: { at: number; map: Record<string, string> } | null = null;
+const DB_CACHE_TTL_MS = 60_000;
+
+export async function loadDbPronunciations(): Promise<Record<string, string>> {
+  if (dbCache && Date.now() - dbCache.at < DB_CACHE_TTL_MS) return dbCache.map;
+  try {
+    const { createServiceClient } = await import("@/lib/supabase/server");
+    const svc = createServiceClient();
+    const { data, error } = await svc
+      .from("pronunciations")
+      .select("original_text,phonetic_text");
+    if (error || !data) {
+      dbCache = { at: Date.now(), map: {} };
+      return {};
+    }
+    const map: Record<string, string> = {};
+    for (const row of data as Array<{ original_text: string; phonetic_text: string }>) {
+      map[row.original_text] = row.phonetic_text;
+    }
+    dbCache = { at: Date.now(), map };
+    return map;
+  } catch {
+    return {};
+  }
+}
+
+export async function applyPronunciationsWithDb(text: string): Promise<string> {
+  const extra = await loadDbPronunciations();
+  return applyPronunciations(text, extra);
 }
