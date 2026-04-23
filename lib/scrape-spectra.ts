@@ -61,6 +61,19 @@ function extractNeighborhood(text: string): string | null {
 
 async function collectUrls(): Promise<string[]> {
   const urls = new Set<string>();
+  // Source 1: Houzez property sitemap (authoritative — lists every live property)
+  try {
+    const xml = await fetchPage(`${BASE}/property-sitemap.xml`);
+    const matches = xml.match(/<loc>[^<]+<\/loc>/g) ?? [];
+    for (const m of matches) {
+      const u = m.replace(/<\/?loc>/g, "").trim();
+      // Skip the bare /נכס/ index root
+      if (u.match(/\/(נכס|%D7%A0%D7%9B%D7%A1|%d7%a0%d7%9b%d7%a1)\/[^/]+\/?$/i)) {
+        urls.add(u.split("?")[0] ?? u);
+      }
+    }
+  } catch { /* skip */ }
+  // Source 2: catalog pages (fallback + picks up anything not yet in sitemap)
   for (const cat of CATALOG_URLS) {
     try {
       const html = await fetchPage(cat);
