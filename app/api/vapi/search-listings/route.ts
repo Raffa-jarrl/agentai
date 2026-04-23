@@ -63,12 +63,15 @@ function formatListingHebrew(l: LiveListing): string {
   return line;
 }
 
-function streetMatches(listingAddress: string, queryStreet: string): boolean {
+function streetMatches(l: LiveListing, queryStreet: string): boolean {
   const norm = (s: string) => s.replace(/['׳"״]/g, "").replace(/\s+/g, " ").trim();
-  const a = norm(listingAddress);
   const q = norm(queryStreet);
   if (!q) return false;
-  return a.includes(q) || q.includes(a.split(" ")[0] ?? "");
+  // Search across address, title, and description — many Spectra titles are
+  // descriptive ("דירת גן חלומית...") so the street name only appears in the
+  // body/description text.
+  const haystack = norm(`${l.address} ${l.title} ${l.description ?? ""}`);
+  return haystack.includes(q);
 }
 
 // Normalize neighborhood aliases so "רובע ראשון", "רובע אלף", "רובע א" all match
@@ -100,7 +103,7 @@ function searchListings(listings: LiveListing[], args: SearchArgs): LiveListing[
     if (args.min_budget && l.price < args.min_budget) return false;
     if (args.neighborhood && l.neighborhood && !neighborhoodMatches(l.neighborhood, args.neighborhood)) return false;
     if (args.property_type && l.property_type !== args.property_type) return false;
-    if (args.street && !streetMatches(l.address, args.street)) return false;
+    if (args.street && !streetMatches(l, args.street)) return false;
     return true;
   }).slice(0, 5);
 }
