@@ -58,8 +58,16 @@ function formatListingHebrew(l: LiveListing): string {
     formatPriceHebrew(l.price),
   ].filter(Boolean);
   let line = parts.join(", ");
-  // Include description so agent can reference move-in date / owner notes verbatim
-  if (l.description) line += `. פרטים נוספים: ${l.description}`;
+  // Include ONLY the sentence from the description that contains a move-in
+  // date hint (כניסה / פינוי / מיידי / תאריך). Skip marketing fluff so the
+  // agent reads a short, clear summary instead of website copy.
+  if (l.description) {
+    const sentences = l.description.split(/[.!?]\s+/);
+    const moveInSentence = sentences.find(s =>
+      /כניסה|פינוי|מיידי|פנוי|זמין/.test(s)
+    );
+    if (moveInSentence) line += `. ${moveInSentence.trim()}`;
+  }
   return line;
 }
 

@@ -148,7 +148,9 @@ async function scrapeOne(url: string): Promise<LiveListing | null> {
     const price = priceM?.[1] ? parseInt(priceM[1].replace(/,/g, "")) : 0;
 
     const sqmM = body.match(/שטח בנוי\s*\n?\s*(\d{2,4})\s*מ/) || body.match(/(\d{2,4})\s*מ״ר/);
-    const floorM = body.match(/קומה\s*\n?\s*(\d{1,2})/);
+    // Strict: "קומה" immediately followed by a small number, not 2+ lines away.
+    // Previously matched "קומה ... (96 מ"ר)" — floor-96 bug.
+    const floorM = body.match(/קומה[\s:]{0,5}(\d{1,2})(?!\d)/);
     const roomsM = body.match(/(\d{1,2}(?:\.\d)?)\s*חד/) || title.match(/(\d+)\s*חד/);
     const typeM = body.match(/סוג נכס\s*\n?\s*([^\n]{2,20})/);
 
@@ -182,7 +184,8 @@ async function scrapeOne(url: string): Promise<LiveListing | null> {
       price,
       rooms: roomsM?.[1] ? parseFloat(roomsM[1]) : null,
       size_sqm: sqmM?.[1] ? parseInt(sqmM[1]) : null,
-      floor: floorM?.[1] ? parseInt(floorM[1]) : null,
+      // Sanity: Ariel has no buildings above ~15 floors. Drop impossible values.
+      floor: floorM?.[1] && parseInt(floorM[1]) <= 20 ? parseInt(floorM[1]) : null,
       property_type: mapType(typeM?.[1] ?? title),
       listing_type,
       description: description.substring(0, 1000) || null,
