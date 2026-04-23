@@ -69,6 +69,11 @@ const PHRASE_DICTIONARY: Record<string, string> = {
   'ממ"ד': "ממד",
   "ממ״ד": "ממד",
 
+  // "שקל" gets mispronounced as "שקר" (sheker = lie) by ElevenLabs v3.
+  // Force the correct pronunciation with explicit niqqud.
+  "שקל": "שֶׁ-קֶל",
+  "שקלים": "שְׁקָ-לִים",
+
   // Fractions
   "3.5": "שלוש וחצי",
   "4.5": "ארבע וחצי",
