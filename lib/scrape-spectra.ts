@@ -59,34 +59,81 @@ function extractNeighborhood(text: string): string | null {
   return null;
 }
 
+// Property-status archives paginate properly (unlike the catalog page which
+// is rendered client-side with AJAX load-more). /page/1/ redirects, so we
+// start at the bare URL then continue /page/2/, /page/3/... until a 404.
+const STATUS_ARCHIVES = [
+  `${BASE}/%D7%A1%D7%98%D7%98%D7%95%D7%A1-%D7%A0%D7%9B%D7%A1/%D7%9C%D7%9E%D7%9B%D7%99%D7%A8%D7%94/`, // למכירה
+  `${BASE}/%D7%A1%D7%98%D7%98%D7%95%D7%A1-%D7%A0%D7%9B%D7%A1/%D7%9C%D7%94%D7%A9%D7%9B%D7%A8%D7%94/`, // להשכרה
+];
+
+function extractPropertyHrefs(html: string, sink: Set<string>) {
+  const $ = cheerio.load(html);
+  $("a[href]").each((_, el) => {
+    const href = $(el).attr("href") || "";
+    if (href.includes("/נכס/") || href.includes("/%D7%A0%D7%9B%D7%A1/") || href.includes("/%d7%a0%d7%9b%d7%a1/")) {
+      const clean = (href.split("?")[0] ?? "").replace(/\/$/, "/");
+      // Skip the bare /נכס/ archive root
+      if (clean && !clean.match(/\/(נכס|%D7%A0%D7%9B%D7%A1|%d7%a0%d7%9b%d7%a1)\/?$/i)) {
+        sink.add(clean);
+      }
+    }
+  });
+}
+
+async function fetchPageWithStatus(url: string): Promise<{ html: string; ok: boolean }> {
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; SpectraAI/1.0)" },
+      next: { revalidate: 3600 },
+      redirect: "follow",
+    });
+    return { html: await res.text(), ok: res.ok };
+  } catch {
+    return { html: "", ok: false };
+  }
+}
+
 async function collectUrls(): Promise<string[]> {
   const urls = new Set<string>();
-  // Source 1: Houzez property sitemap (authoritative — lists every live property)
+
+  // Source 1: property-status archives with pagination (primary — this is the
+  // only place Spectra's Houzez install exposes the full list server-side)
+  for (const archive of STATUS_ARCHIVES) {
+    // First page at the bare URL
+    const first = await fetchPageWithStatus(archive);
+    if (first.ok) extractPropertyHrefs(first.html, urls);
+    // Then paginate. Houzez serves /page/N/ until 404.
+    for (let p = 2; p <= 20; p++) {
+      const res = await fetchPageWithStatus(`${archive}page/${p}/`);
+      if (!res.ok) break;
+      const before = urls.size;
+      extractPropertyHrefs(res.html, urls);
+      // If a page adds zero new URLs twice in a row, stop (defensive)
+      if (urls.size === before && p > 3) break;
+    }
+  }
+
+  // Source 2: Houzez property sitemap (catches anything not in archives)
   try {
     const xml = await fetchPage(`${BASE}/property-sitemap.xml`);
     const matches = xml.match(/<loc>[^<]+<\/loc>/g) ?? [];
     for (const m of matches) {
       const u = m.replace(/<\/?loc>/g, "").trim();
-      // Skip the bare /נכס/ index root
       if (u.match(/\/(נכס|%D7%A0%D7%9B%D7%A1|%d7%a0%d7%9b%d7%a1)\/[^/]+\/?$/i)) {
         urls.add(u.split("?")[0] ?? u);
       }
     }
   } catch { /* skip */ }
-  // Source 2: catalog pages (fallback + picks up anything not yet in sitemap)
+
+  // Source 3: catalog category pages (final fallback)
   for (const cat of CATALOG_URLS) {
     try {
       const html = await fetchPage(cat);
-      const $ = cheerio.load(html);
-      $("a[href]").each((_, el) => {
-        const href = $(el).attr("href") || "";
-        if (href.includes("/נכס/") || href.includes("/%D7%A0%D7%9B%D7%A1/") || href.includes("/%d7%a0%d7%9b%d7%a1/")) {
-          const clean = href.split("?")[0];
-          if (clean) urls.add(clean);
-        }
-      });
+      extractPropertyHrefs(html, urls);
     } catch { /* skip */ }
   }
+
   return [...urls];
 }
 
