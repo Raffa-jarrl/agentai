@@ -24,6 +24,7 @@ interface SearchArgs {
   min_budget?: number;
   neighborhood?: string;
   property_type?: string;
+  street?: string;
 }
 
 // Format price in natural Hebrew speech:
@@ -56,7 +57,18 @@ function formatListingHebrew(l: LiveListing): string {
     l.neighborhood,
     formatPriceHebrew(l.price),
   ].filter(Boolean);
-  return parts.join(", ");
+  let line = parts.join(", ");
+  // Include description so agent can reference move-in date / owner notes verbatim
+  if (l.description) line += `. פרטים נוספים: ${l.description}`;
+  return line;
+}
+
+function streetMatches(listingAddress: string, queryStreet: string): boolean {
+  const norm = (s: string) => s.replace(/['׳"״]/g, "").replace(/\s+/g, " ").trim();
+  const a = norm(listingAddress);
+  const q = norm(queryStreet);
+  if (!q) return false;
+  return a.includes(q) || q.includes(a.split(" ")[0] ?? "");
 }
 
 // Normalize neighborhood aliases so "רובע ראשון", "רובע אלף", "רובע א" all match
@@ -88,6 +100,7 @@ function searchListings(listings: LiveListing[], args: SearchArgs): LiveListing[
     if (args.min_budget && l.price < args.min_budget) return false;
     if (args.neighborhood && l.neighborhood && !neighborhoodMatches(l.neighborhood, args.neighborhood)) return false;
     if (args.property_type && l.property_type !== args.property_type) return false;
+    if (args.street && !streetMatches(l.address, args.street)) return false;
     return true;
   }).slice(0, 5);
 }
