@@ -105,7 +105,7 @@ function searchListings(listings: LiveListing[], args: SearchArgs): LiveListing[
     if (args.property_type && l.property_type !== args.property_type) return false;
     if (args.street && !streetMatches(l, args.street)) return false;
     return true;
-  }).slice(0, 5);
+  });
 }
 
 export async function POST(req: NextRequest) {
@@ -119,10 +119,15 @@ export async function POST(req: NextRequest) {
 
   let result: string;
   if (matches.length === 0) {
-    result = "לא נמצאו נכסים מתאימים בקריטריונים שביקשת. יש לי נכסים אחרים שאולי יתאימו — רוצה שאציע אפשרויות קרובות?";
+    result = "לא נמצאו נכסים מתאימים בקריטריונים שביקשת.";
   } else {
-    const lines = matches.map((l, i) => `${i + 1}. ${formatListingHebrew(l)}`);
-    result = `מצאתי ${matches.length} נכסים:\n${lines.join("\n")}`;
+    // Speak about the first 5 in detail; summarize the rest so the agent can
+    // honestly report the real total (prevents "I have 5 houses" when we
+    // actually have more).
+    const detailed = matches.slice(0, 5);
+    const lines = detailed.map((l, i) => `${i + 1}. ${formatListingHebrew(l)}`);
+    const tail = matches.length > 5 ? `\nסה״כ ${matches.length} נכסים תואמים — מוצגים כאן ${detailed.length} הראשונים, יש עוד ${matches.length - 5} זמינים.` : "";
+    result = `מצאתי ${matches.length} נכסים:\n${lines.join("\n")}${tail}`;
   }
 
   // 1. Pronunciation dictionary — supplies vowelized replacements for abbreviations,
