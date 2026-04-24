@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Home, Users, Sparkles, BarChart3, LogOut, Calendar, Settings, Mic } from "lucide-react";
+import { LayoutDashboard, Home, Users, Sparkles, BarChart3, LogOut, Calendar, Settings, Mic, PhoneCall } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/app/(auth)/actions";
 
@@ -49,6 +49,16 @@ export function Sidebar({ agentName }: { agentName: string }) {
         >
           <Mic className="h-5 w-5 flex-shrink-0" />
           <span>מילון הגייה</span>
+        </Link>
+        <Link
+          href="/settings/call-stats"
+          className={cn(
+            "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 font-medium",
+            pathname === "/settings/call-stats" ? "bg-brand text-white shadow-sm" : "text-muted-foreground hover:bg-muted hover:shadow-xs",
+          )}
+        >
+          <PhoneCall className="h-5 w-5 flex-shrink-0" />
+          <span>סטטיסטיקת שיחות</span>
         </Link>
         <Link
           href="/settings"
