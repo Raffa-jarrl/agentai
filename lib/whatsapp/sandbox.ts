@@ -1,9 +1,12 @@
 /**
- * WhatsApp sandbox / mock layer.
- * Real BSP integration (Meta Cloud API or 360dialog/Twilio) swaps in behind the same interface.
+ * WhatsApp sender. Routes to a real provider (Green API) when credentials are
+ * set, otherwise falls back to the sandbox (logs + stores in conversations).
+ * Real BSP integration (Meta Cloud API or 360dialog/Twilio) swaps in behind
+ * the same interface.
  */
 
 import { createServiceClient } from "@/lib/supabase/server";
+import { greenApiConfigured, sendViaGreenApi } from "./green-api";
 
 export interface WhatsAppMessage {
   to: string; // E.164
@@ -18,11 +21,34 @@ export interface SendResult {
 }
 
 export async function sendWhatsApp(msg: WhatsAppMessage, agentId: string, leadId?: string): Promise<SendResult> {
-  const id = `sandbox-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const when = new Date().toISOString();
+  let result: SendResult;
 
-  // eslint-disable-next-line no-console
-  console.log("[WhatsApp sandbox] →", { agentId, leadId, ...msg, id });
+  if (greenApiConfigured()) {
+    try {
+      result = await sendViaGreenApi(msg);
+      // eslint-disable-next-line no-console
+      console.log("[WhatsApp green-api] →", { agentId, leadId, to: msg.to, id: result.provider_message_id });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("[WhatsApp green-api] failed, falling back to sandbox:", err);
+      result = {
+        provider_message_id: `sandbox-fallback-${Date.now()}`,
+        delivered_at: new Date().toISOString(),
+        sandbox: true,
+      };
+    }
+  } else {
+    result = {
+      provider_message_id: `sandbox-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      delivered_at: new Date().toISOString(),
+      sandbox: true,
+    };
+    // eslint-disable-next-line no-console
+    console.log("[WhatsApp sandbox] →", { agentId, leadId, ...msg, id: result.provider_message_id });
+  }
+
+  const id = result.provider_message_id;
+  const when = result.delivered_at;
 
   if (leadId) {
     const svc = createServiceClient();
@@ -51,5 +77,5 @@ export async function sendWhatsApp(msg: WhatsAppMessage, agentId: string, leadId
     await svc.from("leads").update({ last_contact_at: when }).eq("id", leadId);
   }
 
-  return { provider_message_id: id, delivered_at: when, sandbox: true };
+  return result;
 }

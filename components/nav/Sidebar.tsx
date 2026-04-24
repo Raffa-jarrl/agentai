@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Home, Users, Sparkles, BarChart3, LogOut, Calendar, Settings, Mic, PhoneCall } from "lucide-react";
+import { LayoutDashboard, Home, Users, Sparkles, BarChart3, LogOut, Calendar, Settings, Mic, PhoneCall, Volume2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/app/(auth)/actions";
 
@@ -59,6 +59,16 @@ export function Sidebar({ agentName }: { agentName: string }) {
         >
           <PhoneCall className="h-5 w-5 flex-shrink-0" />
           <span>סטטיסטיקת שיחות</span>
+        </Link>
+        <Link
+          href="/settings/voice-test"
+          className={cn(
+            "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 font-medium",
+            pathname === "/settings/voice-test" ? "bg-brand text-white shadow-sm" : "text-muted-foreground hover:bg-muted hover:shadow-xs",
+          )}
+        >
+          <Volume2 className="h-5 w-5 flex-shrink-0" />
+          <span>השוואת קולות</span>
         </Link>
         <Link
           href="/settings"
