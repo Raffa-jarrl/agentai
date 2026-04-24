@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface Stats {
   callCount: number;
@@ -31,6 +32,21 @@ export default function CallStatsPage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [refreshingListings, setRefreshingListings] = useState(false);
+
+  async function refreshListings() {
+    setRefreshingListings(true);
+    try {
+      const r = await fetch("/api/listings-live/refresh", { method: "POST" });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "שגיאה");
+      toast.success(`נמצאו ${d.count} נכסים (${d.sale} למכירה, ${d.rent} להשכרה)`);
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "שגיאה");
+    } finally {
+      setRefreshingListings(false);
+    }
+  }
 
   async function load() {
     setLoading(true);
@@ -58,9 +74,14 @@ export default function CallStatsPage() {
             נתוני 7 הימים האחרונים של סוכן הטלפון.
           </p>
         </div>
-        <Button variant="outline" onClick={load} disabled={loading}>
-          {loading ? "טוען..." : "רענן"}
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={refreshListings} disabled={refreshingListings}>
+            {refreshingListings ? "מעדכן..." : "רענן נכסים מספקטרה"}
+          </Button>
+          <Button variant="outline" onClick={load} disabled={loading}>
+            {loading ? "טוען..." : "רענן סטטיסטיקה"}
+          </Button>
+        </div>
       </div>
 
       {err && (

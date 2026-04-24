@@ -211,3 +211,11 @@ export async function fetchLiveListings(): Promise<LiveListing[]> {
   _cache = { at: Date.now(), value: out };
   return out;
 }
+
+// Busts the in-memory cache and re-scrapes immediately. Call this after Arik
+// publishes/removes listings on spectra-nadlan.co.il so the voice agent picks
+// them up without waiting for the 1-hour TTL.
+export async function refreshLiveListings(): Promise<LiveListing[]> {
+  _cache = null;
+  return fetchLiveListings();
+}
