@@ -48,12 +48,46 @@ function formatPriceHebrew(price: number): string {
   return `${price} שקל`;
 }
 
+// Rooms in Hebrew words — handles whole + half (e.g. 6.5 → "שש וחצי")
+function roomsToHebrew(n: number): string {
+  const whole = Math.floor(n);
+  const half = n - whole >= 0.5;
+  const wholeWords: Record<number, string> = {
+    1: "חדר אחד", 2: "שני", 3: "שלושה", 4: "ארבעה", 5: "חמישה",
+    6: "שישה", 7: "שבעה", 8: "שמונה", 9: "תשעה", 10: "עשרה",
+  };
+  if (n === 1) return "חדר אחד";
+  const base = wholeWords[whole] ?? String(whole);
+  return half ? `${base} וחצי חדרים` : `${base} חדרים`;
+}
+
+// Size in square meters → Hebrew words
+function sqmToHebrew(n: number): string {
+  const words: Record<number, string> = {
+    50:"חמישים",60:"שישים",70:"שבעים",80:"שמונים",90:"תשעים",
+    100:"מאה",110:"מאה ועשר",120:"מאה ועשרים",130:"מאה ושלושים",
+    140:"מאה וארבעים",150:"מאה וחמישים",160:"מאה ושישים",170:"מאה ושבעים",
+    180:"מאה ושמונים",190:"מאה ותשעים",200:"מאתיים",250:"מאתיים וחמישים",
+  };
+  // round to nearest 10 for speech
+  const rounded = Math.round(n / 10) * 10;
+  return words[rounded] ? `${words[rounded]} מטר` : `${n} מטר`;
+}
+
+function floorToHebrew(n: number): string {
+  const words: Record<number, string> = {
+    0:"קומת קרקע",1:"ראשונה",2:"שנייה",3:"שלישית",4:"רביעית",
+    5:"חמישית",6:"שישית",7:"שביעית",8:"שמינית",9:"תשיעית",10:"עשירית",
+  };
+  return words[n] ? (n === 0 ? words[0]! : `קומה ${words[n]}`) : `קומה ${n}`;
+}
+
 function formatListingHebrew(l: LiveListing): string {
   const parts = [
     l.title.replace(/,\s*אריאל:.*$/, ""), // trim the long title
-    l.rooms ? `${l.rooms} חדרים` : null,
-    l.size_sqm ? `${l.size_sqm} מטר` : null,
-    l.floor != null ? `קומה ${l.floor}` : null,
+    l.rooms ? roomsToHebrew(l.rooms) : null,
+    l.size_sqm ? sqmToHebrew(l.size_sqm) : null,
+    l.floor != null ? floorToHebrew(l.floor) : null,
     l.neighborhood,
     formatPriceHebrew(l.price),
   ].filter(Boolean);
