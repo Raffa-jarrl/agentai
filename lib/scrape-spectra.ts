@@ -196,8 +196,18 @@ async function scrapeOne(url: string): Promise<LiveListing | null> {
   }
 }
 
+// Module-level in-memory cache. `next: { revalidate: 3600 }` caches each
+// individual spectra fetch, but the orchestration (collectUrls + scrapeOne × N)
+// still re-runs on every call → 60-100s cold. This cache short-circuits the
+// whole pipeline so the second+ calls in a 1-hour window return in <50ms.
+let _cache: { at: number; value: LiveListing[] } | null = null;
+const _TTL = 60 * 60 * 1000;
+
 export async function fetchLiveListings(): Promise<LiveListing[]> {
+  if (_cache && Date.now() - _cache.at < _TTL) return _cache.value;
   const urls = await collectUrls();
   const results = await Promise.all(urls.map(scrapeOne));
-  return results.filter((l): l is LiveListing => l !== null && (l.price > 0 || !!l.title));
+  const out = results.filter((l): l is LiveListing => l !== null && (l.price > 0 || !!l.title));
+  _cache = { at: Date.now(), value: out };
+  return out;
 }
