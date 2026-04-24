@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchLiveListings, type LiveListing } from "@/lib/scrape-spectra";
 import { applyPronunciationsWithDb } from "@/lib/pronunciations";
 import { vowelizeHebrew } from "@/lib/nakdan";
+import { createServiceClient } from "@/lib/supabase/server";
 
 export const revalidate = 3600;
 
@@ -10,6 +11,7 @@ export const revalidate = 3600;
 
 interface VapiToolCall {
   message?: {
+    call?: { id?: string; customer?: { number?: string } };
     toolCalls?: Array<{
       id: string;
       function: { name: string; arguments: Record<string, unknown> };
@@ -117,13 +119,23 @@ function floorToHebrew(n: number): string {
   return words[n] ? (n === 0 ? words[0]! : `קומה ${words[n]}`) : `קומה ${n}`;
 }
 
+// Extract a short street/address label from a listing. `l.address` is pulled
+// from the title by the scraper; for titles that are marketing copy we fall
+// back to the neighborhood so the agent always has SOMETHING to read.
+function streetLabel(l: LiveListing): string {
+  if (l.address && l.address !== "אריאל") return l.address;
+  if (l.neighborhood) return l.neighborhood;
+  return "אריאל";
+}
+
 function formatListingHebrew(l: LiveListing): string {
+  // Street name ALWAYS first so the agent reads it aloud to callers.
   const parts = [
-    l.title.replace(/,\s*אריאל:.*$/, ""), // trim the long title
+    streetLabel(l),
     l.rooms ? roomsToHebrew(l.rooms) : null,
     l.size_sqm ? sqmToHebrew(l.size_sqm) : null,
     l.floor != null ? floorToHebrew(l.floor) : null,
-    l.neighborhood,
+    l.neighborhood && l.neighborhood !== streetLabel(l) ? l.neighborhood : null,
     formatPriceHebrew(l.price),
   ].filter(Boolean);
   let line = parts.join(", ");
@@ -190,9 +202,37 @@ export async function POST(req: NextRequest) {
   const toolCall = body.message?.toolCalls?.[0];
   if (!toolCall) return NextResponse.json({ error: "no tool call" }, { status: 400 });
 
+  const callId = body.message?.call?.id ?? null;
   const args = toolCall.function.arguments as SearchArgs;
   const all = await fetchLiveListings();
   const matches = searchListings(all, args);
+
+  // Cache the top 5 matches keyed by call ID so queue_whatsapp can resolve
+  // `listing_number` → full listing (URL + details) without the LLM having to
+  // pass long URLs through its prompt.
+  if (callId && matches.length > 0) {
+    try {
+      const svc = createServiceClient();
+      // Upsert: if the agent runs search_listings twice in the same call (e.g.
+      // after refining filters), overwrite the previous numbering.
+      await svc.from("call_search_results").delete().eq("call_id", callId);
+      const rows = matches.slice(0, 5).map((l, i) => ({
+        call_id: callId,
+        listing_number: i + 1,
+        url: l.url,
+        title: l.title,
+        street: streetLabel(l),
+        neighborhood: l.neighborhood,
+        price: l.price,
+        rooms: l.rooms,
+        size_sqm: l.size_sqm,
+        floor: l.floor,
+        listing_type: l.listing_type,
+        property_type: l.property_type,
+      }));
+      await svc.from("call_search_results").insert(rows);
+    } catch { /* cache is best-effort; search still returns text */ }
+  }
 
   let result: string;
   if (matches.length === 0) {
@@ -202,9 +242,13 @@ export async function POST(req: NextRequest) {
     // honestly report the real total (prevents "I have 5 houses" when we
     // actually have more).
     const detailed = matches.slice(0, 5);
-    const lines = detailed.map((l, i) => `${i + 1}. ${formatListingHebrew(l)}`);
+    const lines = detailed.map((l, i) => `נכס ${i + 1}: ${formatListingHebrew(l)}`);
     const tail = matches.length > 5 ? `\nסה״כ ${matches.length} נכסים תואמים — מוצגים כאן ${detailed.length} הראשונים, יש עוד ${matches.length - 5} זמינים.` : "";
-    result = `מצאתי ${matches.length} נכסים:\n${lines.join("\n")}${tail}`;
+    // Instruct the agent on the one-by-one reading + WhatsApp queue workflow.
+    // The prompt reinforces this too, but reminding here makes the behavior
+    // robust against prompt drift.
+    const workflow = `\n\nהוראה: הקראי כל נכס בנפרד, החל מהרחוב. בין נכס לנכס שאלי "להוסיף לרשימת הוואטסאפ?". אם כן — קראי לפונקציה queue_whatsapp עם פרטי אותו נכס.`;
+    result = `מצאתי ${matches.length} נכסים:\n${lines.join("\n")}${tail}${workflow}`;
   }
 
   // 1. Pronunciation dictionary — supplies vowelized replacements for abbreviations,
