@@ -27,25 +27,60 @@ interface SearchArgs {
   street?: string;
 }
 
+// Convert 1-999 to Hebrew words (feminine form used in counting nouns like thousands/shekels)
+function numToHebrew999(n: number): string {
+  if (n === 0) return "";
+  const ones = ["", "אחת", "שתיים", "שלוש", "ארבע", "חמש", "שש", "שבע", "שמונה", "תשע"];
+  const tens = ["", "עשר", "עשרים", "שלושים", "ארבעים", "חמישים", "שישים", "שבעים", "שמונים", "תשעים"];
+  const teens = ["עשר", "אחת עשרה", "שתים עשרה", "שלוש עשרה", "ארבע עשרה", "חמש עשרה", "שש עשרה", "שבע עשרה", "שמונה עשרה", "תשע עשרה"];
+  const hundreds = ["", "מאה", "מאתיים", "שלוש מאות", "ארבע מאות", "חמש מאות", "שש מאות", "שבע מאות", "שמונה מאות", "תשע מאות"];
+  const h = Math.floor(n / 100);
+  const rest = n % 100;
+  const parts: string[] = [];
+  if (h > 0) parts.push(hundreds[h]!);
+  if (rest >= 10 && rest < 20) {
+    parts.push(teens[rest - 10]!);
+  } else {
+    const t = Math.floor(rest / 10);
+    const o = rest % 10;
+    if (t > 0 && o > 0) parts.push(`${tens[t]} ו${ones[o]}`);
+    else if (t > 0) parts.push(tens[t]!);
+    else if (o > 0) parts.push(ones[o]!);
+  }
+  return parts.join(" ");
+}
+
+// Millions (masculine form since מיליון is masculine)
+function millionsToHebrew(n: number): string {
+  if (n === 1) return "מיליון";
+  const mascOnes = ["", "אחד", "שני", "שלושה", "ארבעה", "חמישה", "שישה", "שבעה", "שמונה", "תשעה", "עשרה"];
+  if (n <= 10) return `${mascOnes[n]} מיליון`;
+  return `${numToHebrew999(n)} מיליון`;
+}
+
 // Format price in natural Hebrew speech:
 // 1,480,000 → "מיליון וארבע מאות ושמונים אלף שקל"
 // 2,500,000 → "שני מיליון וחצי שקל"
+// 3,799,000 → "שלושה מיליון שבע מאות תשעים ותשעה אלף שקל"
 // 4,500     → "ארבעת אלפים וחמש מאות שקל"
 function formatPriceHebrew(price: number): string {
   if (price >= 1_000_000) {
     const millions = Math.floor(price / 1_000_000);
     const remainder = price % 1_000_000;
-    const thousands = Math.round(remainder / 1000);
-    const millionsWord = millions === 1 ? "מיליון" : millions === 2 ? "שני מיליון" : `${millions} מיליון`;
-    if (thousands === 0) return `${millionsWord} שקל`;
-    if (thousands === 500) return `${millionsWord} וחצי שקל`;
-    return `${millionsWord} ו${thousands} אלף שקל`;
+    const thousandsNum = Math.round(remainder / 1000);
+    const mWord = millionsToHebrew(millions);
+    if (thousandsNum === 0) return `${mWord} שקל`;
+    if (thousandsNum === 500) return `${mWord} וחצי שקל`;
+    return `${mWord} ו${numToHebrew999(thousandsNum)} אלף שקל`;
   }
   if (price >= 1000) {
     const thousands = Math.round(price / 1000);
-    return `${thousands} אלף שקל`;
+    // Special duals
+    if (thousands === 1) return "אלף שקל";
+    if (thousands === 2) return "אלפיים שקל";
+    return `${numToHebrew999(thousands)} אלף שקל`;
   }
-  return `${price} שקל`;
+  return `${numToHebrew999(price)} שקל`;
 }
 
 // Rooms in Hebrew words — handles whole + half (e.g. 6.5 → "שש וחצי")
