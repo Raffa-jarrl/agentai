@@ -94,44 +94,48 @@ async function fetchPageWithStatus(url: string): Promise<{ html: string; ok: boo
   }
 }
 
+// Spectra has ~32 listings total (≈3 pages of 10). 6 is generous; raising it
+// further only adds 404 round-trips that block the Vapi 20s tool deadline.
+const MAX_PAGES = 6;
+
 async function collectUrls(): Promise<string[]> {
   const urls = new Set<string>();
 
-  // Source 1: property-status archives with pagination (primary — this is the
-  // only place Spectra's Houzez install exposes the full list server-side)
+  // Build the full URL list up-front so every fetch runs in parallel (vs.
+  // sequential pagination which previously cost ~20s in 404 round-trips and
+  // tripped Vapi's 20s tool-webhook timeout).
+  const archivePages: string[] = [];
   for (const archive of STATUS_ARCHIVES) {
-    // First page at the bare URL
-    const first = await fetchPageWithStatus(archive);
-    if (first.ok) extractPropertyHrefs(first.html, urls);
-    // Then paginate. Houzez serves /page/N/ until 404.
-    for (let p = 2; p <= 20; p++) {
-      const res = await fetchPageWithStatus(`${archive}page/${p}/`);
-      if (!res.ok) break;
-      const before = urls.size;
-      extractPropertyHrefs(res.html, urls);
-      // If a page adds zero new URLs twice in a row, stop (defensive)
-      if (urls.size === before && p > 3) break;
-    }
+    archivePages.push(archive); // page 1 at bare URL
+    for (let p = 2; p <= MAX_PAGES; p++) archivePages.push(`${archive}page/${p}/`);
   }
 
-  // Source 2: Houzez property sitemap (catches anything not in archives)
-  try {
-    const xml = await fetchPage(`${BASE}/property-sitemap.xml`);
-    const matches = xml.match(/<loc>[^<]+<\/loc>/g) ?? [];
+  // Source 1 (paginated archives) + Source 2 (sitemap) in parallel.
+  const [archiveResults, sitemap] = await Promise.all([
+    Promise.all(archivePages.map(fetchPageWithStatus)),
+    fetchPage(`${BASE}/property-sitemap.xml`).catch(() => ""),
+  ]);
+
+  for (const r of archiveResults) {
+    if (r.ok) extractPropertyHrefs(r.html, urls);
+  }
+
+  if (sitemap) {
+    const matches = sitemap.match(/<loc>[^<]+<\/loc>/g) ?? [];
     for (const m of matches) {
       const u = m.replace(/<\/?loc>/g, "").trim();
       if (u.match(/\/(נכס|%D7%A0%D7%9B%D7%A1|%d7%a0%d7%9b%d7%a1)\/[^/]+\/?$/i)) {
         urls.add(u.split("?")[0] ?? u);
       }
     }
-  } catch { /* skip */ }
+  }
 
-  // Source 3: catalog category pages (final fallback)
-  for (const cat of CATALOG_URLS) {
-    try {
-      const html = await fetchPage(cat);
-      extractPropertyHrefs(html, urls);
-    } catch { /* skip */ }
+  // Source 3: catalog category pages (final fallback) — also in parallel.
+  const catalogResults = await Promise.all(
+    CATALOG_URLS.map((cat) => fetchPage(cat).catch(() => "")),
+  );
+  for (const html of catalogResults) {
+    if (html) extractPropertyHrefs(html, urls);
   }
 
   return [...urls];
